@@ -1,0 +1,11 @@
+# Ignore environment files
+Backend/config/.env
+frontend/node_modules/
+Backend/node_modules/
+# Uploads & temp files
+uploads/
+temp/
+*.tmp
+
+
+Backend/uploads
