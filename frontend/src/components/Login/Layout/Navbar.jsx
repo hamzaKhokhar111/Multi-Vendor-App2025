@@ -1,11 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import styles from '../../../styles/styles'
-import { navItems } from '../../../static/data.jsx'
+import React from "react";
+import { Link } from "react-router-dom";
+import styles from "../../../styles/styles";
+import { navItems } from "../../../static/data.jsx";
 
 const Navbar = ({ active }) => {
   return (
-    <div className={`flex ${styles.noramlFlex}`}>
+    <div className={`flex 800px:${styles.noramlFlex}`}>
       {navItems &&
         navItems.map((i, index) => (
           <div key={index} className="flex">
@@ -14,7 +14,7 @@ const Navbar = ({ active }) => {
               className={`${
                 active === index + 1
                   ? "text-[#17dd1f]"
-                  : "text-black 800px:text-[#fff]"
+                  : "text-white items-center 800px:text-[#fff]"
               } pb-[30px] 800px:pb-0 font-[500] px-6 cursor-pointer`}
             >
               {i.title}
@@ -22,7 +22,7 @@ const Navbar = ({ active }) => {
           </div>
         ))}
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
