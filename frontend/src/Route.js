@@ -10,9 +10,9 @@ import ProductsPage from "./pages/ProductsPage";
 import ProfilePage from "./pages/ProfilePage";
 import SellerActivationPage from "./pages/SellerActivationPage";
 import ShopCreatePage from "./pages/ShopCreate";
+import ShopHomePage from "./pages/ShopHomePage";
+import ShopLoginPage from "./pages/ShopLoginPage";
 import SignUpPage from "./pages/SignUpPage";
-
-
 
 
 
@@ -30,7 +30,8 @@ export {
     ProfilePage,
     CheckoutPage,
     ShopCreatePage,
-    SellerActivationPage
-    
+    SellerActivationPage,
+    ShopLoginPage,
+    ShopHomePage
     
 };

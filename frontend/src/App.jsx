@@ -1,22 +1,27 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter,Route, Routes } from 'react-router-dom'
-import {  ActivationPage, BestSellingPage, CheckoutPage, EventsPage, FAQPage, HomePage, LoginPage, ProductDetailsPage, ProductsPage, ProfilePage,  SellerActivationPage,  ShopCreatePage, SignUpPage } from './Route'
+import { BrowserRouter,Navigate,NavigationType,Route, Routes } from 'react-router-dom'
+import {  ActivationPage, BestSellingPage, CheckoutPage, EventsPage, FAQPage, HomePage, LoginPage, ProductDetailsPage, ProductsPage, ProfilePage,  SellerActivationPage,  ShopCreatePage, ShopHomePage, ShopLoginPage, SignUpPage } from './Route'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
 import { server } from './server';
 import Store from './redux/store';
-import { loadUser } from './redux/actions/user';
+import { loadSeller, loadUser } from './redux/actions/user';
 // import ProtectedRoute from './ProtectedRoute';
 import { useSelector } from 'react-redux';
 import ProtectedRoute from './ProtectedRoute';
+import SellerProtectedRoute from './SellerProtectedRoute';
+// import SellerProtectedRoute from './SellerProtectedRoute';
 
 export default function App() {
  const { loading , isAuthenticated}= useSelector((state)=> state.user);
+ const { isSeller}= useSelector((state)=> state.seller);
 
   useEffect(()=>{
     Store.dispatch(loadUser());
-  })
+    Store.dispatch(loadSeller());
+
+  },[])
 
 
   return (
@@ -32,6 +37,14 @@ export default function App() {
       <Route path='/events' element={<EventsPage/>}/>
       <Route path='/faq' element={<FAQPage/>}/>
       <Route path='/seller' element={<ShopCreatePage/>}/>
+      <Route path='/shop-login' element={<ShopLoginPage/>}/>
+      <Route path='/shop/:id' element={
+        <SellerProtectedRoute
+        isSeller={isSeller}
+        >
+          <ShopHomePage/>
+        </SellerProtectedRoute>
+      }/>
 
      <Route
      path='/checkout'

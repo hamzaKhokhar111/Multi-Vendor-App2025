@@ -3,6 +3,7 @@ const User = require("../models/user");
 // const Shop = require("../model/shop");
 const catchAsyncErrors = require("./catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
+const shop = require("../models/shop");
 
 exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
     const {token} = req.cookies;
@@ -27,7 +28,7 @@ exports.isSeller = catchAsyncErrors(async(req,res,next) => {
 
     const decoded = jwt.verify(seller_token, process.env.JWT_SECRET_KEY);
 
-    req.seller = await Shop.findById(decoded.id);
+    req.seller = await shop.findById(decoded.id);
 
     next();
 });
