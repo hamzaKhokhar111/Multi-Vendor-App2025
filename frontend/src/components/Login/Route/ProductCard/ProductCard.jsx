@@ -14,25 +14,29 @@ import styles from "../../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Ratings from "../../Products/Ratings";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
+import { backend_url } from "../../../../server";
 // import ProductDetailsCard from  "../ProductDetailsCard/ProductDetailsCard";
 // import {
 //   addToWishlist,
 //   removeFromWishlist,
 // } from "../../../redux/actions/wishlist";
-// import { useEffect } from "react"; 
+// import { useEffect } from "react";
 // import { addTocart } from "../../../redux/actions/cart";
 // import { toast } from "react-toastify";
 // import Ratings from "../../Products/Ratings";
 
-const ProductCard = ({ data,isEvent }) => {
+const ProductCard = ({ data, isEvent }) => {
   // const { wishlist } = useSelector((state) => state.wishlist);
   // const { cart } = useSelector((state) => state.cart);
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
   // const dispatch = useDispatch();
 
-  const d=data.name;
-  const product_name=d.replace(/\s+/g,"-");
+// console.log("BestDeals product:", data);
+
+
+  const d = data.name;
+  const product_name = d.replace(/\s+/g, "-");
 
   // useEffect(() => {
   //   if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -71,16 +75,24 @@ const ProductCard = ({ data,isEvent }) => {
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
-        <Link to={`/product/${product_name}`}>      
-          <img
-            src={data.image_Url[0].url}
-            alt=""
-            className="w-full h-[170px] object-contain"
-          />
+        <Link to={`/product/${product_name}`}>
+   <img
+  src={
+    data?.images && data.images.length > 0
+      ? `http://localhost:8000/${data.images[0]
+          .replace(/\\/g, "/")   // backslash → forward slash
+          .replace("E:/Multi-Vendor 2025/Backend/", "")}` // local path hatao
+      : "/placeholder.png"
+  }
+  alt={data?.name || "product"}
+  className="w-full h-[170px] object-contain"
+/>
+
+
         </Link>
         <Link to={`/shop/preview/${data?.shop._id}`}>
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
-        </Link> 
+        </Link>
 
         <Link to={`/product/${product_name}`}>
           <h4 className="pb-3 font-[500]">
@@ -88,16 +100,13 @@ const ProductCard = ({ data,isEvent }) => {
           </h4>
 
           <div className="flex">
-          <Ratings rating={data?.ratings} />
+            <Ratings rating={data?.ratings} />
           </div>
 
           <div className="py-2 flex items-center justify-between">
             <div className="flex">
               <h5 className={`${styles.productDiscountPrice}`}>
-                {data.originalPrice === 0
-                  ? data.price
-                  : data.discount_price}
-                $
+                {data.originalPrice === 0 ? data.price : data.discount_price}$
               </h5>
               <h4 className={`${styles.price}`}>
                 {data.price ? data.price + " $" : null}
@@ -133,7 +142,7 @@ const ProductCard = ({ data,isEvent }) => {
             size={22}
             className="cursor-pointer absolute right-2 top-14"
             // onClick={() => setOpen(!open)}
-            onClick={click ? "red": "#333"}
+            onClick={click ? "red" : "#333"}
             color="#333"
             title="Quick view"
           />

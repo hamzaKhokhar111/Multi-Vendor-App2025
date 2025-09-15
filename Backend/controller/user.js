@@ -16,7 +16,7 @@ const path = require("path");
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const userEmail = await User.findOne({ email });
 
     if (userEmail) {
@@ -33,7 +33,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       password,
       avatar: fileUrl
     };
-    console.log("User before activation:", user);
+    // console.log("User before activation:", user);
 
     const activationToken = createActivationToken(user);
     const activationUrl = `http://localhost:5173/activation/${activationToken}`;
