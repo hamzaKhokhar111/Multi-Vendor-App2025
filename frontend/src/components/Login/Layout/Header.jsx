@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../../styles/styles";
 import { categoriesData, productData } from "../../../static/data";
-import { backend_url, server } from "../../../server";
+import { backend_url, getImageUrl, server } from "../../../server";
 import Cart from "../../../cart/Cart";
 import Wishlist from "../../Wishlist/Wishlist";
 
@@ -26,7 +26,7 @@ const Header = ({ activeHeading }) => {
   //   const { isSeller } = useSelector((state) => state.seller);
   //   const { wishlist } = useSelector((state) => state.wishlist);
   //   const { cart } = useSelector((state) => state.cart);
-  //   const { allProducts } = useSelector((state) => state.products);
+    const { allProducts } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -35,15 +35,15 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // console.log(user.avatar)
+  console.log("All Projects  !!! ", allProducts)
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
     const filteredProducts =
-      productData &&
-      productData.filter((product) =>
+      allProducts &&
+      allProducts.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filteredProducts);
@@ -98,7 +98,7 @@ const Header = ({ activeHeading }) => {
                       <Link to={`/product/${Product_name}`} key={index}>
                         <div className="w-full flex items-start-py-3">
                           <img
-                            src={i.image_Url[0].url}
+                           src={getImageUrl(i.images[0])}
                             alt={i.name}
                             className="w-[40px] h-[40px] mr-[10px]"
                           />

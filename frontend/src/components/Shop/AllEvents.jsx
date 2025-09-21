@@ -10,7 +10,9 @@ import { Link } from "react-router-dom";
 import Loader from "../Layout/Loader";
 import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 
-const AllEvents = () => {
+console.log("All Events is here ... ", getAllEventsShop)
+
+const AllEvents = () => { 
   const { events, isLoading } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
 

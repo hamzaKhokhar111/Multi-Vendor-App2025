@@ -4,6 +4,7 @@ const initialState = {
   isAuthenticated: false,
 };
 
+
 export const userReducer = createReducer(initialState, (builder) => {
   builder
     .addCase("LoadUserRequest", (state) => {
@@ -23,3 +24,5 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.error = null;
     });
 });
+
+

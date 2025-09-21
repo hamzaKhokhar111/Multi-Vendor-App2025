@@ -83,6 +83,7 @@ router.post("/login-user", catchAsyncErrors(async (req, res, next) => {
 }));
 
 
+
 router.get("/getuser", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
@@ -118,7 +119,7 @@ router.post(
 
       const newUser = jwt.verify(
         activation_token,
-        process.env.ACTIVATION_SECRET
+        process.env.ACTIVATION_SECRET 
       );
 
       if (!newUser) {

@@ -5,6 +5,8 @@ const catchAsyncErrors = require("./catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const shop = require("../models/shop");
 
+
+
 exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
     const {token} = req.cookies;
 

@@ -14,7 +14,7 @@ import styles from "../../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
 import Ratings from "../../Products/Ratings";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
-import { backend_url } from "../../../../server";
+import { backend_url, getImageUrl } from "../../../../server";
 // import ProductDetailsCard from  "../ProductDetailsCard/ProductDetailsCard";
 // import {
 //   addToWishlist,
@@ -32,8 +32,7 @@ const ProductCard = ({ data, isEvent }) => {
   const [open, setOpen] = useState(false);
   // const dispatch = useDispatch();
 
-// console.log("BestDeals product:", data);
-
+  // console.log("BestDeals product:", data);
 
   const d = data.name;
   const product_name = d.replace(/\s+/g, "-");
@@ -76,19 +75,11 @@ const ProductCard = ({ data, isEvent }) => {
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
         <Link to={`/product/${product_name}`}>
-   <img
-  src={
-    data?.images && data.images.length > 0
-      ? `http://localhost:8000/${data.images[0]
-          .replace(/\\/g, "/")   // backslash → forward slash
-          .replace("E:/Multi-Vendor 2025/Backend/", "")}` // local path hatao
-      : "/placeholder.png"
-  }
-  alt={data?.name || "product"}
-  className="w-full h-[170px] object-contain"
-/>
-
-
+          <img
+            src={getImageUrl(data?.images?.[0])}
+            alt={data?.name || "product"}
+            className="w-full h-[170px] object-contain"
+          />
         </Link>
         <Link to={`/shop/preview/${data?.shop._id}`}>
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>

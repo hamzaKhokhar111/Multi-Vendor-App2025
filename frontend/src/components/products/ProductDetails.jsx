@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
   AiOutlineHeart,
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styles from "../../styles/styles";
+import { getImageUrl } from "../../server";
+import { getAllProductsShop } from "../../redux/actions/product";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const dispatch = useDispatch();
+
+  const { products } = useSelector((state) => state.products);
+  // console.log("products data from ProductDetail data is here .. : ", data)
+  useEffect(() => {
+    dispatch(getAllProductsShop(data && data.shop._id));
+  }, [dispatch, data]);
 
   const incrementCount = () => setCount(count + 1);
 
@@ -55,9 +63,9 @@ const ProductDetails = ({ data }) => {
               {/* Left Images */}
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data?.image_Url[0].url}
+                  src={getImageUrl(data?.images?.[select])}
                   alt={data.name}
-                  className="w-[80%]"
+                  className="w-[80%] max-h-[400px] object-contain mx-auto"
                 />
                 <div className="w-full flex flex-wrap">
                   {data.images &&
@@ -70,7 +78,7 @@ const ProductDetails = ({ data }) => {
                         onClick={() => setSelect(index)}
                       >
                         <img
-                          src={i?.url}
+                          src={getImageUrl(i)}
                           alt=""
                           className="h-[100px] w-[100px] object-cover mr-2 mt-3"
                         />
@@ -88,9 +96,7 @@ const ProductDetails = ({ data }) => {
                     {data.discountPrice}$
                   </h4>
                   {data.originalPrice && (
-                    <h3 className={`${styles.price}`}>
-                      {data.originalPrice}$
-                    </h3>
+                    <h3 className={`${styles.price}`}>{data.originalPrice}$</h3>
                   )}
                 </div>
 
@@ -148,8 +154,8 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop?._id}`}>
                     <img
-                      src={data?.shop?.avatar?.url}
-                      alt={data?.shop?.name}
+                       src={getImageUrl(data?.images?.[select])}
+                      alt="heloo"
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
                   </Link>
@@ -243,7 +249,7 @@ const ProductDetailsInfo = ({ data }) => {
             <Link to={`/shop/preview/${data?.shop?._id}`}>
               <div className="flex items-center">
                 <img
-                  src={data.shop.shop_name.url}
+                  src={getImageUrl(data?.images?.[0])}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />
@@ -260,7 +266,7 @@ const ProductDetailsInfo = ({ data }) => {
               <h5 className="font-[600]">
                 Joined on:{" "}
                 <span className="font-[500]">
-                  14 March, 2025
+                  {data.shop?.createdAt?.slice(0, 10)}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
@@ -286,4 +292,3 @@ const ProductDetailsInfo = ({ data }) => {
 };
 
 export default ProductDetails;
- 

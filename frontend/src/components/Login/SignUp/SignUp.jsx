@@ -29,7 +29,7 @@ const handleSubmit = async (e) => {
   formData.append("name", name);
   formData.append("email", email);
   formData.append("password", password);
-     console.log([...formData]);
+    //  console.log([...formData]);
   try {
     const res = await axios.post(`${server}/user/create-user`, formData, {
       // headers: { "Content-Type": "multipart/form-data" }, ❌ ye mat likho

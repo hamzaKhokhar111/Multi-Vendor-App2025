@@ -16,6 +16,8 @@ function ProfileContent({ active }) {
   const [address2, setAddress2] = useState("");
   const dispatch = useDispatch();
 
+
+  console.log("Useeeeeeeeeer is  !!! ", user)
   const handleSubmit = (e)=>{
     e.preventDefault();
   }

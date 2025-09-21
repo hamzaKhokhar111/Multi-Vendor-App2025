@@ -43,9 +43,11 @@ router.post(
   })
 );
 
-router.get("/get-all-events/:id", async (req, res, next) => {
+
+
+router.get("/get-all-events", async (req, res, next) => {
   try {
-    const events = await Event.find({ shopId: req.params.id });
+    const events = await Event.find();
     res.status(201).json({
       success: true,
       events,

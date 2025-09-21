@@ -2,13 +2,16 @@ import React from "react";
 // import styles from "../../styles/styles";
 import styles from "../../../styles/styles";
 import CountDown from "./CountDown/CountDown";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 // import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../../server";
 
-const EventCard = () => {
+const EventCard = ({data}) => {
+  console.log("event dataaaa ", data)
+  // console.log("hmzuu", data)
 //   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
@@ -32,26 +35,27 @@ const EventCard = () => {
     >
       <div className="w-full lg:-w[50%] m-auto">
         {/* <img src={`${data.images[0]?.url}`} alt="" /> */}
-        <img src="https://st-troy.mncdn.com/mnresize/1500/1500/Content/media/ProductImg/original/mpwp3tua-apple-iphone-14-256gb-mavi-mpwp3tua-637986832343472449.jpg"
+        <img 
+           src={getImageUrl(data?.images?.[0])}
          alt="" />
       </div> 
       <div className="w-full lg:[w-50%] flex flex-col justify-center">
-        <h2 className={`${styles.productTitle}`}>Iphone 14Pro max 8/256gb</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt ipsam fugit pariatur velit odit, error, officia qui eligendi fugiat nostrum dicta doloremque, voluptates nam! Praesentium ratione eveniet illum quibusdam distinctio ut harum, voluptate, ab repellat provident impedit quidem, quo incidunt!</p>
+        {/* <h2 className={`${styles.productTitle}`}>{data.name}</h2> */}
+        {/* <p>{data.description}</p> */}
         <div className="flex py-2 justify-between">
           <div className="flex">
             <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
-              1099$
+              {/* {data.originalPrice} */}
             </h5>
             <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-              999$
+              {/* {data.discountPrice}   */}
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
             120 sold
           </span>
         </div>
-        <CountDown  />
+        {/* <CountDown data={data}  /> */}
         <br />
         <div className="flex items-center">
           <Link to={`/product`}>

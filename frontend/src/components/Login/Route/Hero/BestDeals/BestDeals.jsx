@@ -9,18 +9,18 @@ import { getAllProducts } from "../../../../../redux/actions/product";
 const BestDeals = () => {
   const [data, setData] = useState([]);
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { allProducts } = useSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(getAllProducts()); // ✅ load all products
   }, [dispatch]);
 
   useEffect(() => {
-    if (products && products.length > 0) {
-      const sorted = [...products].sort((a, b) => b.sold_out - a.sold_out);
+    if (allProducts && allProducts.length > 0) {
+      const sorted = [...allProducts].sort((a, b) => b.sold_out - a.sold_out);
       setData(sorted.slice(0, 5));
     }
-  }, [products]);
+  }, [allProducts]);
 
   // console.log("Prooo ", data);
 

@@ -4,31 +4,36 @@ import { useSearchParams } from "react-router-dom";
 import Footer from "../components/Login/Layout/Footer";
 import ProductCard from "../components/Login/Route/ProductCard/ProductCard";
 import Header from "../components/Login/Layout/Header";
-// import Loader from "../components/Layout/Loader";
 import styles from "../styles/styles";
-import { productData } from "../static/data";
 
 const ProductsPage = () => {
   const [searchParams] = useSearchParams();
   const categoryData = searchParams.get("category");
-//   const {allProducts,isLoading} = useSelector((state) => state.products);
+  const { allProducts, isLoading } = useSelector((state) => state.products);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (categoryData === null) {
-      const d = productData && productData.sort((a,b)=> a.total_sell-b.total_sell);
-      setData(d);
-    } else {
-      const d =productData && productData.filter((i) => i.category === categoryData);
-      setData(d);
+    if (allProducts && allProducts.length > 0) {
+      if (categoryData === null) {
+        const d = [...allProducts].sort((a, b) => a.sold_out - b.sold_out);
+        setData(d);
+      } else {
+        const d = allProducts.filter((i) => i.category === categoryData);
+        setData(d);
+      }
     }
-    //    window.scrollTo(0,0);
-  }, []);
+  }, [allProducts, categoryData]); // ✅ fixed dependency
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex items-center justify-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
-  <>
- 
-      <div>
+    <div>
       <Header activeHeading={3} />
       <br />
       <br />
@@ -36,16 +41,14 @@ const ProductsPage = () => {
         <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
           {data && data.map((i, index) => <ProductCard data={i} key={index} />)}
         </div>
-        {data && data.length === 0 ? (
+        {data && data.length === 0 && (
           <h1 className="text-center w-full pb-[100px] text-[20px]">
             No products Found!
           </h1>
-        ) : null}
+        )}
       </div>
       <Footer />
     </div>
-   
-  </>
   );
 };
 

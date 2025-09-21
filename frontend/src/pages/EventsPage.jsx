@@ -7,8 +7,8 @@ import EventCard from "../components/Login/Events/EventCard";
 // import Loader from "../components/Layout/Loader";
 
 const EventsPage = () => {
-    const {allEvents, SetallEvents}=useState()
-//   const { allEvents, isLoading } = useSelector((state) => state.events);
+    // const {allEvents, SetallEvents}=useState()
+  const { allEvents, isLoading } = useSelector((state) => state.events);
   return (
     <>
    

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { server } from "../../server";
 
+
+
 // create product
 export const createProduct = (newForm) => async (dispatch) => {
   try {
@@ -27,7 +29,6 @@ export const createProduct = (newForm) => async (dispatch) => {
     });
   }
 };
-
 
 
 
