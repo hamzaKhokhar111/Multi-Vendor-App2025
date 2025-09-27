@@ -5,34 +5,31 @@ import { HiOutlineMinus, HiPlus } from "react-icons/hi";
 import styles from "../styles/styles";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../redux/actions/cart";
 
 const Cart = ({ setOpenCart }) => {
-  // Dummy cart data
-  const cartData = [
-    {
-      name: "Iphone 14 Pro Max 256GB Silver",
-      description: "Best iPhone ever",
-      discountPrice: 999,
-    },
-    {
-      name: "Samsung S23 Ultra 512GB",
-      description: "Flagship Samsung phone",
-      discountPrice: 899,
-    },
-    {
-      name: "MacBook Pro M2 16GB RAM",
-      description: "Apple laptop",
-      discountPrice: 1299,
-    },
-  ];
+  const { cart } = useSelector((state) => state.cart);
+  console.log("The value of Cart is ", cart)
+  const dispatch = useDispatch();
 
-  // Condition check: empty cart
-  const isCartEmpty = cartData.length === 0;
+  const removeFromCartHandler = (data) => {
+    dispatch(removeFromCart(data));
+  };
+
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.qty * item.discountPrice,
+    0
+  );
+
+  const quantityChangeHandler = (data) => {
+    dispatch(addToCart(data));
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
       <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
-        
+
         {/* Close Button */}
         <div className="flex w-full justify-end pt-5 pr-5">
           <RxCross1
@@ -43,7 +40,7 @@ const Cart = ({ setOpenCart }) => {
         </div>
 
         {/* If Cart Empty */}
-        {isCartEmpty ? (
+        {cart.length === 0 ? (
           <div className="h-screen flex items-center justify-center">
             <h5 className="text-[18px] font-[500]">Cart is empty!</h5>
           </div>
@@ -53,14 +50,19 @@ const Cart = ({ setOpenCart }) => {
             <div className={`${styles.noramlFlex} p-4`}>
               <IoBagHandleOutline size={25} />
               <h5 className="pl-2 text-[20px] font-[500]">
-                {cartData.length} items
+                {cart.length} items
               </h5>
             </div>
 
             {/* Cart Items */}
             <div className="w-full border-t">
-              {cartData.map((i, index) => (
-                <CartSingle key={index} data={i} />
+              {cart.map((i, index) => (
+                <CartSingle
+                  key={index}
+                  data={i}
+                  quantityChangeHandler={quantityChangeHandler}
+                  removeFromCartHandler={removeFromCartHandler}
+                />
               ))}
             </div>
 
@@ -69,7 +71,7 @@ const Cart = ({ setOpenCart }) => {
               <Link to="/checkout">
                 <div className="h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]">
                   <h1 className="text-[#fff] text-[18px] font-[600]">
-                    Checkout Now
+                    Checkout Now (USD${totalPrice})
                   </h1>
                 </div>
               </Link>
@@ -82,12 +84,18 @@ const Cart = ({ setOpenCart }) => {
 };
 
 // Single Cart Item
-const CartSingle = ({ data }) => {
-  const [value, setValue] = useState(1);
+const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
+  const [value, setValue] = useState(data.qty);
   const totalPrice = data.discountPrice * value;
 
   const increment = () => {
+    if (data.stock <= value) {
+      toast.error("Product stock limited!");
+      return;
+    }
     setValue(value + 1);
+    const updateCartData = { ...data, qty: value + 1 };
+    quantityChangeHandler(updateCartData);
   };
 
   const decrement = () => {
@@ -96,6 +104,8 @@ const CartSingle = ({ data }) => {
       return;
     }
     setValue(value - 1);
+    const updateCartData = { ...data, qty: value - 1 };
+    quantityChangeHandler(updateCartData);
   };
 
   return (
@@ -120,8 +130,8 @@ const CartSingle = ({ data }) => {
 
         {/* Product Image */}
         <img
-          src="https://static.vecteezy.com/system/resources/previews/011/996/555/original/3d-black-headphone-illustration-ecommerce-icon-png.png"
-          alt=""
+          src={data?.images && data.images[0]?.url}
+          alt={data.name}
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />
 
@@ -139,7 +149,7 @@ const CartSingle = ({ data }) => {
         {/* Remove Button */}
         <RxCross1
           className="cursor-pointer ml-auto"
-          onClick={() => toast.info("Item removed (Dummy Function)")}
+          onClick={() => removeFromCartHandler(data)}
         />
       </div>
     </div>

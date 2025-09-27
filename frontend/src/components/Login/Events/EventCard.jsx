@@ -1,67 +1,46 @@
 import React from "react";
-// import styles from "../../styles/styles";
-import styles from "../../../styles/styles";
-import CountDown from "./CountDown/CountDown";
-import { data, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
-// import { addTocart } from "../../redux/actions/cart";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import { getImageUrl } from "../../../server";
+import styles from "../../../styles/styles";
 
-const EventCard = ({data}) => {
-  console.log("event dataaaa ", data)
-  // console.log("hmzuu", data)
-//   const { cart } = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
-
-//   const addToCartHandler = (data) => {
-//     const isItemExists = cart && cart.find((i) => i._id === data._id);
-//     if (isItemExists) {
-//       toast.error("Item already in cart!");
-//     } else {
-//       if (data.stock < 1) {
-//         toast.error("Product stock limited!");
-//       } else {
-//         const cartData = { ...data, qty: 1 };
-//         dispatch(addTocart(cartData));
-//         toast.success("Item added to cart successfully!");
-//       }
-//     }
-//   }
+const EventCard = ({ data }) => {
   return (
-    <div
-      className={`w-full block bg-white rounded-lg`}
-    >
-      <div className="w-full lg:-w[50%] m-auto">
-        {/* <img src={`${data.images[0]?.url}`} alt="" /> */}
-        <img 
-           src={getImageUrl(data?.images?.[0])}
-         alt="" />
-      </div> 
-      <div className="w-full lg:[w-50%] flex flex-col justify-center">
-        {/* <h2 className={`${styles.productTitle}`}>{data.name}</h2> */}
-        {/* <p>{data.description}</p> */}
-        <div className="flex py-2 justify-between">
-          <div className="flex">
-            <h5 className="font-[500] text-[18px] text-[#d55b45] pr-3 line-through">
-              {/* {data.originalPrice} */}
+    <div className="w-full block bg-white rounded-lg shadow p-4">
+      {/* Image */}
+      <div className="w-full flex justify-center">
+        <img
+          src={getImageUrl(data?.images?.[0])}
+          alt={data?.name}
+          className="w-[200px] h-[200px] object-cover rounded-lg"
+        />
+      </div>
+
+      {/* Details */}
+      <div className="mt-4">
+        <h2 className={`${styles.productTitle}`}>{data?.name}</h2>
+        <p className="text-gray-600 text-sm line-clamp-2">{data?.description}</p>
+
+        {/* Prices */}
+        <div className="flex py-2 justify-between items-center">
+          <div className="flex items-center gap-2">
+            <h5 className="font-medium text-[16px] text-gray-500 line-through">
+              Rs {data?.originalPrice}
             </h5>
-            <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-              {/* {data.discountPrice}   */}
+            <h5 className="font-bold text-[18px] text-[#d55b45]">
+              Rs {data?.discountPrice}
             </h5>
           </div>
-          <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-            120 sold
+          <span className="font-[400] text-[15px] text-[#44a55e]">
+            {data?.sold_out} sold
           </span>
         </div>
-        {/* <CountDown data={data}  /> */}
-        <br />
-        <div className="flex items-center">
-          <Link to={`/product`}>
+
+        {/* Buttons */}
+        <div className="flex items-center mt-3 gap-4">
+          <Link to={`/product/${data?._id}`}>
             <div className={`${styles.button} text-[#fff]`}>See Details</div>
           </Link>
-          <div className={`${styles.button} text-[#fff] ml-5`}>Add to cart</div>
+          <div className={`${styles.button} text-[#fff]`}>Add to cart</div>
         </div>
       </div>
     </div>

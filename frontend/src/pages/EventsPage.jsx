@@ -9,6 +9,7 @@ import EventCard from "../components/Login/Events/EventCard";
 const EventsPage = () => {
     // const {allEvents, SetallEvents}=useState()
   const { allEvents, isLoading } = useSelector((state) => state.events);
+  // console.log("Events is ehre ", allEvents)
   return (
     <>
    

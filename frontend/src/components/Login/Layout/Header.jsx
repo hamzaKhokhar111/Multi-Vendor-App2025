@@ -24,8 +24,8 @@ import Wishlist from "../../Wishlist/Wishlist";
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
   //   const { isSeller } = useSelector((state) => state.seller);
-  //   const { wishlist } = useSelector((state) => state.wishlist);
-  //   const { cart } = useSelector((state) => state.cart);
+    const { wishlist } = useSelector((state) => state.wishlist);
+    const { cart } = useSelector((state) => state.cart);
     const { allProducts } = useSelector((state) => state.products);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
@@ -35,7 +35,6 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
-  console.log("All Projects  !!! ", allProducts)
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -93,9 +92,8 @@ const Header = ({ activeHeading }) => {
               {searchData && searchData.length > 0 && (
                 <div className="absolute min-h-[30vh] w-full bg-slate-50 shadow-sm-2 z-[9] p-4">
                   {searchData.map((i, index) => {
-                    const Product_name = i.name.replace(/\s+/g, "-");
                     return (
-                      <Link to={`/product/${Product_name}`} key={index}>
+                      <Link to={`/product/${i._id}`} key={index}>
                         <div className="w-full flex items-start-py-3">
                           <img
                            src={getImageUrl(i.images[0])}
@@ -158,7 +156,7 @@ const Header = ({ activeHeading }) => {
             <div className={`${styles.noramlFlex} `}>
               <Navbar active={activeHeading} />
             </div>
-
+          
             {/* Icons */}
             <div className="flex">
               {/* Wishlist */}
@@ -168,7 +166,7 @@ const Header = ({ activeHeading }) => {
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-                  0
+                  {wishlist &&  wishlist.length}
                 </span>
               </div>
 
@@ -182,7 +180,7 @@ const Header = ({ activeHeading }) => {
                   color="rgb(255 255 255 / 83%)"
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-                  1
+                  {cart && cart.length}
                 </span>
               </div>
 
@@ -243,7 +241,7 @@ const Header = ({ activeHeading }) => {
             <div className="relative mr-[20px]">
               <AiOutlineShoppingCart size={30} />
               <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                1
+                {cart  && cart.length}
               </span>
             </div>
           </div>

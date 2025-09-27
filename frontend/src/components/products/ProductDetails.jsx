@@ -11,15 +11,19 @@ import { toast } from "react-toastify";
 import styles from "../../styles/styles";
 import { getImageUrl } from "../../server";
 import { getAllProductsShop } from "../../redux/actions/product";
+import { addToCart } from "../../redux/actions/cart";
+import { addToWishlist, removeFromWishlist } from "../../redux/actions/wishlist";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.products);
-  // console.log("products data from ProductDetail data is here .. : ", data)
+  // console.log("products data from ProductDetail data is here .. : ", d)
   useEffect(() => {
     dispatch(getAllProductsShop(data && data.shop._id));
   }, [dispatch, data]);
@@ -34,26 +38,35 @@ const ProductDetails = ({ data }) => {
 
   const removeFromWishlistHandler = () => {
     setClick(false);
-    toast.info("Removed from wishlist");
-    // dispatch(removeFromWishlist(data));
+    toast.info("Removed from wishlist !");
+    dispatch(removeFromWishlist(data));
   };
 
   const addToWishlistHandler = () => {
     setClick(true);
-    toast.success("Added to wishlist");
-    // dispatch(addToWishlist(data));
+    toast.success("Added to wishlist !");
+    dispatch(addToWishlist(data));
   };
 
-  const addToCartHandler = () => {
-    if (data.stock < 1) {
-      toast.error("Product stock limited!");
-    } else {
-      const cartData = { ...data, qty: count };
-      // dispatch(addTocart(cartData));
-      toast.success("Item added to cart successfully!");
-    }
-  };
+ 
+const addToCartHandler = () => {
+  if (data.stock < 1) {
+    toast.error("Product stock limited!");
+  } else {
+    const cartData = { ...data, qty: count };
+    dispatch(addToCart(cartData));
 
+    // 👇 Yahan confirm karenge ke cart me aa gaya ya nahi
+    setTimeout(() => {
+      const isAdded = cart.find((i) => i._id === data._id);
+      if (isAdded) {
+        toast.success("Item added to cart successfully||!");
+      } else {
+        toast.error("Failed to add item to cart!");
+      }
+    }, 300); // thoda delay dena zaroori hai kyunki redux update async hai
+  }
+}; 
   return (
     <div className="bg-white">
       {data ? (

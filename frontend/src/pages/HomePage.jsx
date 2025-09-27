@@ -8,8 +8,10 @@ import FeaturedProduct from '../components/Login/Route/FeaturedProduct/FeaturedP
 import Events from '../components/Login/Events/Events'
 import Sponsored from '../components/Login/Route/Sponsored'
 import Footer from '../components/Login/Layout/Footer'
+import { useSelector } from 'react-redux'
 
 function HomePage() {
+ 
   return (
     <div className={`${styles.section}`}>
         <Header activeHeading={1}/>

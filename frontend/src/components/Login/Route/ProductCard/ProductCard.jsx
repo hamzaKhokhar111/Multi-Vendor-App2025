@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
   AiFillStar,
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Ratings from "../../Products/Ratings";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import { backend_url, getImageUrl } from "../../../../server";
+import { addToWishlist, removeFromWishlist } from "../../../../redux/actions/wishlist";
 // import ProductDetailsCard from  "../ProductDetailsCard/ProductDetailsCard";
 // import {
 //   addToWishlist,
@@ -26,55 +27,77 @@ import { backend_url, getImageUrl } from "../../../../server";
 // import Ratings from "../../Products/Ratings";
 
 const ProductCard = ({ data, isEvent }) => {
-  // const { wishlist } = useSelector((state) => state.wishlist);
-  // const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   // console.log("BestDeals product:", data);
 
   const d = data.name;
   const product_name = d.replace(/\s+/g, "-");
 
-  // useEffect(() => {
-  //   if (wishlist && wishlist.find((i) => i._id === data._id)) {
-  //     setClick(true);
-  //   } else {
-  //     setClick(false);
-  //   }
-  // }, [wishlist]);
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [wishlist]);
 
-  // const removeFromWishlistHandler = (data) => {
-  //   setClick(!click);
-  //   dispatch(removeFromWishlist(data));
-  // };
+const removeFromWishlistHandler = (data) => {
+  setClick(!click);
+  dispatch(removeFromWishlist(data))
+    .then(() => {
+      toast.info("Item removed from wishlist 🗑️", {
+        position: "top-center",
+      });
+    })
+    .catch(() => {
+      toast.error("Failed to remove item from wishlist!", {
+        position: "top-center",
+      });
+    });
+};
+ const addToWishlistHandler = (data) => {
+  setClick(!click);
+  dispatch(addToWishlist(data))
+    .then(() => {
+      toast.success("Item added to wishlist successfully! 🎉", {
+        position: "top-center",
+      });
+    })
+    .catch(() => {
+      toast.error("Failed to add item to wishlist!", {
+        position: "top-center",
+      });
+    });
+};
 
-  // const addToWishlistHandler = (data) => {
-  //   setClick(!click);
-  //   dispatch(addToWishlist(data));
-  // };
-
-  // const addToCartHandler = (id) => {
-  //   const isItemExists = cart && cart.find((i) => i._id === id);
-  //   if (isItemExists) {
-  //     toast.error("Item already in cart!");
-  //   } else {
-  //     if (data.stock < 1) {
-  //       toast.error("Product stock limited!");
-  //     } else {
-  //       const cartData = { ...data, qty: 1 };
-  //       dispatch(addTocart(cartData));
-  //       toast.success("Item added to cart successfully!");
-  //     }
-  //   }
-  // };
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < 1) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: 1 }; 
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
 
   return (
     <>
+    {/* <h1>hmmmzuuuuuu</h1> */}
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
+
+        {/* <h1>Heloo This is product card x  </h1> */}
         <div className="flex justify-end"></div>
-        <Link to={`/product/${product_name}`}>
+        <Link to={`/product/${data._id}`}>
           <img
             src={getImageUrl(data?.images?.[0])}
             alt={data?.name || "product"}
@@ -85,7 +108,7 @@ const ProductCard = ({ data, isEvent }) => {
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
         </Link>
 
-        <Link to={`/product/${product_name}`}>
+        <Link to={`/product/${data._id}`}>
           <h4 className="pb-3 font-[500]">
             {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
           </h4>
@@ -115,7 +138,7 @@ const ProductCard = ({ data, isEvent }) => {
             <AiFillHeart
               size={22}
               className="cursor-pointer absolute right-2 top-5"
-              // onClick={() => removeFromWishlistHandler(data)}
+              onClick={() => removeFromWishlistHandler(data)}
               color={click ? "red" : "#333"}
               title="Remove from wishlist"
             />
@@ -123,8 +146,8 @@ const ProductCard = ({ data, isEvent }) => {
             <AiOutlineHeart
               size={22}
               className="cursor-pointer absolute right-2 top-5"
-              // onClick={() => addToWishlistHandler(data)}
-              onClick={click ? "red" : "#333"}
+              onClick={() => addToWishlistHandler(data)}
+              // onClick={click ? "red" : "#333"}
               color={click ? "red" : "#333"}
               title="Add to wishlist"
             />
@@ -132,17 +155,17 @@ const ProductCard = ({ data, isEvent }) => {
           <AiOutlineEye
             size={22}
             className="cursor-pointer absolute right-2 top-14"
-            // onClick={() => setOpen(!open)}
-            onClick={click ? "red" : "#333"}
+            onClick={() => setOpen(!open)}
+            // onClick={click ? "red" : "#333"}
             color="#333"
             title="Quick view"
           />
           <AiOutlineShoppingCart
             size={25}
             className="cursor-pointer absolute right-2 top-24"
-            // onClick={() => addToCartHandler(data._id)}
+            onClick={() => addToCartHandler(data._id)}
             color="#444"
-            title="Add to cart"
+            title="Add to cartssssss"
           />
           {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>

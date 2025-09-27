@@ -8,20 +8,20 @@ import { useSelector } from 'react-redux';
 
 function ProductDetailsPage() {
   const { allProducts } = useSelector((state) => state.products);
-  const { name } = useParams();
+  const { id } = useParams();
   const [data, setData] = useState(null);
 
   // URL param ko normalize karna (slug me "-" ko space ke equal treat karna)
   const productName = name.replace(/-/g, "").toLowerCase();
 
-  useEffect(() => {
-    if (allProducts && allProducts.length > 0) {
-      const product = allProducts.find(
-        (i) => i.name.replace(/\s/g, "").toLowerCase() === productName
-      );
-      setData(product || null);
-    }
-  }, [name, allProducts]); // ✅ yahan fix kiya
+useEffect(() => {
+  if (allProducts && allProducts.length > 0) {
+    const product = allProducts.find(
+      (i) => i._id === id
+    );
+    setData(product || null);
+  }
+}, [name, allProducts]);
 
   return (
     <div>

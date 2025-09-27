@@ -11,19 +11,19 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { getImageUrl } from "../../../../server";
-// import { addTocart } from "../../../redux/actions/cart";
+import { addToCart } from "../../../../redux/actions/cart";
+
 // import {
 //   addToWishlist,
 //   removeFromWishlist,
 // } from "../../../redux/actions/wishlist";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
-//   const { cart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
 //   const { wishlist } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
-    const [select, setSelect] = useState(false); 
 
   // const handleMessageSubmit = () => {};
 
@@ -33,24 +33,24 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     }
   };
 
-  const incrementCount = () => {s
+  const incrementCount = () => {
     setCount(count + 1);
   };
 
-  // const addToCartHandler = (id) => {
-  //   const isItemExists = cart && cart.find((i) => i._id === id);
-  //   if (isItemExists) {
-  //     toast.error("Item already in cart!");
-  //   } else {
-  //     if (data.stock < count) {
-  //       toast.error("Product stock limited!");
-  //     } else {
-  //       const cartData = { ...data, qty: count };
-  //       dispatch(addTocart(cartData));
-  //       toast.success("Item added to cart successfully!");
-  //     }
-  //   }
-  // };
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < count) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addToCart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
 
   // useEffect(() => {
   //   if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -70,8 +70,14 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   //   dispatch(addToWishlist(data));
   // };
 
+  
+  const handleMessageSubmit = () => {
+  toast.info("Messaging feature coming soon!");
+};
+
   return (
     <div className="bg-[#fff]">
+      <h1>Hellooo Haazaaza this is productdetail card wala</h1>
       {data ? (
         <div className="fixed w-full h-screen top-0 left-0 bg-[#00000030] z-40 flex items-center justify-center">
           <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-white rounded-md shadow-sm relative p-4">
@@ -84,7 +90,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-               src={getImageUrl(data?.images?.[0])}
+              src={data?.images?.length ? getImageUrl(data.images[0]) : "/placeholder.png"}
+
                  alt="" />
                 <div className="flex">
                   <Link to={`/shop/preview/${data.shop._id}`} className="flex">
@@ -97,7 +104,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                       <h3 className={`${styles.shop_name}`}>
                         {data.shop.name}
                       </h3>
-                      <h5 className="pb-3 text-[15px]"> (4/5) Ratings</h5>
+                      <h5 className="pb-3 text-[15px]"> (4/5) Ratingssss</h5>
                     </div>
                   </Link>
                 </div>
@@ -106,7 +113,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   onClick={handleMessageSubmit}
                 >
                   <span className="text-[#fff] flex items-center">
-                    Send Message <AiOutli neMessage className="ml-1" />
+                    Send Message <AiOutlineMessage className="ml-1" />
                   </span>
                 </div>
                 <h5 className="text-[16px] text-[red] mt-5">({data.total_sell}) Sold out</h5>
@@ -120,7 +127,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discountPrice}$
+                   {data.discountPrice ? `${data.discountPrice}$` : ""}
+
                   </h4>
                   <h3 className={`${styles.price}`}>
                     {data.originalPrice ? data.originalPrice + "$" : null}
@@ -167,10 +175,10 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 </div>
                 <div
                   className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
-                  // onClick={() => addToCartHandler(data._id)}
+                  onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-[#fff] flex items-center">
-                    Add to cart <AiOutlineShoppingCart className="ml-1" />
+                    Add to cartttttt <AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
               </div>
