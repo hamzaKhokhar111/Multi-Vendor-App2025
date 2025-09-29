@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { backend_url } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineCamera } from "react-icons/ai";
 import styles from "../../styles/styles";
+import { updateUserInformation } from "../../redux/actions/user";
+import { toast } from "react-toastify";
 
 function ProfileContent({ active }) {
-  const { user } = useSelector((state) => state.user);
+  const { user ,error } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [avatar, setAvatar] = useState(null);
@@ -17,9 +19,16 @@ function ProfileContent({ active }) {
   const dispatch = useDispatch();
 
 
-  console.log("Useeeeeeeeeer is  !!! ", user)
+
+  useEffect(()=>{
+    if(error){
+      toast.error(error);
+    }
+  },[error])
+  // console.log("Useeeeeeeeeer is  !!! ", user)
   const handleSubmit = (e)=>{
     e.preventDefault();
+    dispatch(updateUserInformation(name, email , phoneNumber, password))
   }
   return (
     <div className="w-full">
@@ -77,41 +86,21 @@ function ProfileContent({ active }) {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Zip Code</label>
+
+                 <div className="w-[100%] 800px:w-[50%] pr-0 800px:pr-4 mb-4 800px:mb-0">
+                  <label className="block pb-2">Enter Your Password</label>
                   <input
-                    type="number"
+                    type="password"
                     className={`${styles.input} !w-full`}
                     required
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
+              
               </div>
 
-              {/* Row 3 */}
-              <div className="w-full 800px:flex block pb-3">
-                <div className="w-[100%] 800px:w-[50%] pr-0 800px:pr-4 mb-4 800px:mb-0">
-                  <label className="block pb-2">Address 1</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-full`}
-                    required
-                    value={address1}
-                    onChange={(e) => setAddress1(e.target.value)}
-                  />
-                </div>
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Address 2</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-full`}
-                    required
-                    value={address2}
-                    onChange={(e) => setAddress2(e.target.value)}
-                  />
-                </div>
-              </div>
+           
 
               {/* Submit Button */}
               <input
