@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { backend_url } from "../../server";
+import { backend_url, server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineCamera } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { updateUserInformation } from "../../redux/actions/user";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function ProfileContent({ active }) {
-  const { user ,error } = useSelector((state) => state.user);
+  const { user, error } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -18,18 +19,37 @@ function ProfileContent({ active }) {
   const [address2, setAddress2] = useState("");
   const dispatch = useDispatch();
 
-
-
-  useEffect(()=>{
-    if(error){
+  useEffect(() => {
+    if (error) {
       toast.error(error);
     }
-  },[error])
+  }, [error]);
   // console.log("Useeeeeeeeeer is  !!! ", user)
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateUserInformation(name, email , phoneNumber, password))
-  }
+    dispatch(updateUserInformation(name, email, phoneNumber, password));
+  };
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // frontend preview ke liye
+    setAvatar(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      await axios.put(`${server}/user/update-avatar`, formData, {
+        withCredentials: true,
+      });
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Upload failed");
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Profile Page */}
@@ -38,12 +58,21 @@ function ProfileContent({ active }) {
           {/* Profile Avatar */}
           <div className="relative mb-6">
             <img
-              src={`${backend_url}uploads/${user?.avatar}`}
+              src={avatar ? avatar : `${backend_url}uploads/${user?.avatar}`}
               className="w-[150px] h-[150px] object-cover border-[3px] border-[#3ad132] rounded-full"
               alt="ppp"
             />
+
             <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-              <AiOutlineCamera />
+              <input
+                type="file"
+                id="image"
+                className="hidden"
+                onChange={handleImage}
+              />
+              <label htmlFor="image">
+                <AiOutlineCamera />
+              </label>
             </div>
           </div>
 
@@ -87,7 +116,7 @@ function ProfileContent({ active }) {
                   />
                 </div>
 
-                 <div className="w-[100%] 800px:w-[50%] pr-0 800px:pr-4 mb-4 800px:mb-0">
+                <div className="w-[100%] 800px:w-[50%] pr-0 800px:pr-4 mb-4 800px:mb-0">
                   <label className="block pb-2">Enter Your Password</label>
                   <input
                     type="password"
@@ -97,10 +126,7 @@ function ProfileContent({ active }) {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-              
               </div>
-
-           
 
               {/* Submit Button */}
               <input
@@ -112,8 +138,6 @@ function ProfileContent({ active }) {
           </div>
         </div>
       )}
-
-      
     </div>
   );
 }

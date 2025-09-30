@@ -11,6 +11,8 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { upload } = require("../multer");
 const path = require("path");
+const { fstat } = require("fs");
+const fs = require("fs");
 
 // create user
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
@@ -205,39 +207,39 @@ router.put(
 
 
 // update user avatar
-// router.put(
-//   "/update-avatar",
-//   isAuthenticated,
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       let existsUser = await User.findById(req.user.id);
-//       if (req.body.avatar !== "") {
-//         const imageId = existsUser.avatar.public_id;
+router.put(
+  "/update-avatar",
+  isAuthenticated,
+  upload.single("image"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      let existsUser = await User.findById(req.user.id);
 
-//         await cloudinary.v2.uploader.destroy(imageId);
+      // Purana avatar agar ho to usko delete karo
+      if (existsUser.avatar) {
+        const existAvatarPath = path.join("uploads", existsUser.avatar);
+        if (fs.existsSync(existAvatarPath)) {
+          fs.unlinkSync(existAvatarPath);
+        }
+      }
 
-//         const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-//           folder: "avatars",
-//           width: 150,
-//         });
+      // Naya avatar set karo
+      const fileUrl = req.file.filename;
+      console.log(req.file.file)
 
-//         existsUser.avatar = {
-//           public_id: myCloud.public_id,
-//           url: myCloud.secure_url,
-//         };
-//       }
+      existsUser.avatar = fileUrl;
+      await existsUser.save();
 
-//       await existsUser.save();
+      res.status(200).json({
+        success: true,
+        user: existsUser,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
-//       res.status(200).json({
-//         success: true,
-//         user: existsUser,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
 
 
 
